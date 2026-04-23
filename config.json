@@ -1,0 +1,11 @@
+{
+  "plex_min_artist_rating": 2.5,
+  "plex_min_track_rating": 3.0,
+  "sample_size": 10,
+  "daily_add_limit": 5,
+  "fuzz_threshold": 95,
+  "quality_profile_id": 1,
+  "metadata_profile_id": 1,
+  "root_folder_path": "/data/Music",
+  "lastfm_rec_limit": 5
+}

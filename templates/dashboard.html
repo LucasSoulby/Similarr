@@ -1,0 +1,113 @@
+{% extends "base.html" %} {% block header %}System Dashboard{% endblock %} {%
+block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-arrcard p-6 rounded-lg shadow border-l-4 border-similarr">
+    <h3
+      class="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-2"
+    >
+      Artists Added Today
+    </h3>
+    <p id="stat-added-today" class="text-3xl font-bold text-white">
+      {{ stats.added_today }} / {{ config.daily_add_limit }}
+    </p>
+  </div>
+
+  <div class="bg-arrcard p-6 rounded-lg shadow border-l-4 border-blue-500">
+    <h3
+      class="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-2"
+    >
+      Total Monitored
+    </h3>
+    <p id="stat-total-monitored" class="text-3xl font-bold text-white">
+      {{ stats.total_added }}
+    </p>
+  </div>
+
+  <div
+    id="stat-card-status"
+    class="bg-arrcard p-6 rounded-lg shadow border-l-4 {% if stats.status == 'Scanning...' %}border-yellow-500{% else %}border-green-500{% endif %}"
+  >
+    <h3
+      class="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-2"
+    >
+      Engine Status
+    </h3>
+    <p
+      id="stat-engine-status"
+      class="text-xl font-bold {% if stats.status == 'Scanning...' %}text-yellow-400{% else %}text-green-400{% endif %} mt-2"
+    >
+      {% if stats.status == 'Scanning...' %}
+      <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+      {% else %}
+      <i class="fa-solid fa-circle-check mr-2"></i>
+      {% endif %} {{ stats.status }}
+    </p>
+  </div>
+</div>
+
+<div class="bg-arrcard rounded-lg shadow p-6 border border-gray-700">
+  <h3
+    class="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2"
+  >
+    <i class="fa-solid fa-list-ul mr-2 text-similarr"></i> Recent Discoveries
+  </h3>
+
+  <div id="activity-log-container" class="space-y-3 h-64 overflow-y-auto pr-2">
+    {% if activity %} {% for item in activity %}
+    <div
+      class="bg-arrbg rounded p-3 text-sm text-gray-300 border-l-4 border-similarr shadow-sm"
+    >
+      {{ item }}
+    </div>
+    {% endfor %} {% else %}
+    <p class="text-gray-400 text-sm italic py-2">
+      No activity logged yet. Click 'Run Discovery Now' to start scanning!
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function updateDashboard() {
+    fetch("/api/stats")
+      .then((response) => response.json())
+      .then((data) => {
+        // 1. Update the Basic Stats
+        document.getElementById("stat-added-today").innerText =
+          `${data.added_today} / ${data.daily_limit}`;
+        document.getElementById("stat-total-monitored").innerText =
+          data.total_added;
+
+        // 2. Dynamically Update the Status Card Colors and Icon
+        const statusCard = document.getElementById("stat-card-status");
+        const statusEl = document.getElementById("stat-engine-status");
+
+        if (data.status === "Scanning...") {
+          statusCard.className =
+            "bg-arrcard p-6 rounded-lg shadow border-l-4 border-yellow-500";
+          statusEl.className = "text-xl font-bold text-yellow-400 mt-2";
+          statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i>${data.status}`;
+        } else {
+          statusCard.className =
+            "bg-arrcard p-6 rounded-lg shadow border-l-4 border-green-500";
+          statusEl.className = "text-xl font-bold text-green-400 mt-2";
+          statusEl.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${data.status}`;
+        }
+
+        // 3. Update the Activity Log Feed
+        const logContainer = document.getElementById("activity-log-container");
+        if (data.activity && data.activity.length > 0) {
+          let logHTML = "";
+          data.activity.forEach((item) => {
+            logHTML += `<div class="bg-arrbg rounded p-3 text-sm text-gray-300 border-l-4 border-similarr shadow-sm">${item}</div>`;
+          });
+          logContainer.innerHTML = logHTML;
+        }
+      })
+      .catch((error) => console.error("Error fetching live stats:", error));
+  }
+
+  // Tell the browser to run this function silently every 3 seconds (3000ms)
+  setInterval(updateDashboard, 3000);
+</script>
+{% endblock %}

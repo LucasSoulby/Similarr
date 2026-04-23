@@ -1,0 +1,4 @@
+requests
+plexapi
+thefuzz[speedup]
+Flask

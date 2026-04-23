@@ -1,0 +1,158 @@
+{% extends "base.html" %} {% block header %}Application Settings{% endblock %}
+{% block content %}
+<div
+  class="max-w-3xl bg-arrcard rounded-lg shadow-lg p-8 border border-gray-700"
+>
+  <form action="/settings" method="POST" class="space-y-8">
+    <div>
+      <h3
+        class="text-similarr font-semibold border-b border-gray-700 pb-2 mb-4"
+      >
+        Engine Limits & Thresholds
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Daily Add Limit</label
+          >
+          <input
+            type="number"
+            name="daily_add_limit"
+            value="{{ config.daily_add_limit }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+          <p class="text-xs text-gray-500 mt-1">Max artists added per day.</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Fuzzy Match Strictness (%)</label
+          >
+          <input
+            type="number"
+            name="fuzz_threshold"
+            value="{{ config.fuzz_threshold }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            Keep around 95 to avoid duplicates.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3
+        class="text-similarr font-semibold border-b border-gray-700 pb-2 mb-4"
+      >
+        Discovery Parameters
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Plex Min Artist Rating</label
+          >
+          <input
+            type="number"
+            step="0.5"
+            name="plex_min_artist_rating"
+            value="{{ config.plex_min_artist_rating }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Plex Min Track Rating</label
+          >
+          <input
+            type="number"
+            step="0.5"
+            name="plex_min_track_rating"
+            value="{{ config.plex_min_track_rating }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Plex Sample Size</label
+          >
+          <input
+            type="number"
+            name="sample_size"
+            value="{{ config.sample_size }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            Number of random Plex items to check per run.
+          </p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Last.fm Recs per Item</label
+          >
+          <input
+            type="number"
+            name="lastfm_rec_limit"
+            value="{{ config.lastfm_rec_limit }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            How many similar artists Last.fm suggests.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3
+        class="text-similarr font-semibold border-b border-gray-700 pb-2 mb-4"
+      >
+        Lidarr Integration
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Quality Profile ID</label
+          >
+          <input
+            type="number"
+            name="quality_profile_id"
+            value="{{ config.quality_profile_id }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Metadata Profile ID</label
+          >
+          <input
+            type="number"
+            name="metadata_profile_id"
+            value="{{ config.metadata_profile_id }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-400 mb-2"
+            >Root Folder Path</label
+          >
+          <input
+            type="text"
+            name="root_folder_path"
+            value="{{ config.root_folder_path }}"
+            class="w-full bg-arrbg border border-gray-600 rounded-md py-2 px-4 text-white focus:outline-none focus:border-similarr"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-gray-700">
+      <button
+        type="submit"
+        class="bg-similarr hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-md transition duration-200 shadow-md"
+      >
+        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
