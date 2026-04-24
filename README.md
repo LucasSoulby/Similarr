@@ -48,10 +48,10 @@ services:
 ### 2. Create your `.env` file
 You need to provide your API keys for the script to talk to your homelab. Create a file named `.env` in the same directory:
 ```env
-PLEX_URL=[http://192.168.](http://192.168.)x.x:32400
+PLEX_URL=http://192.168.x.x:32400
 PLEX_TOKEN=your_plex_token_here
 LASTFM_API_KEY=your_lastfm_api_key_here
-LIDARR_URL=[http://192.168.](http://192.168.)x.x:8686
+LIDARR_URL=http://192.168.x.x:32400
 LIDARR_API_KEY=your_lidarr_api_key_here
 PORT=web_ui_port_here
 ```
