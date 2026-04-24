@@ -21,6 +21,7 @@ LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY', '')
 LIDARR_URL = os.environ.get('LIDARR_URL', '')
 LIDARR_API_KEY = os.environ.get('LIDARR_API_KEY', '')
 LIDARR_HEADERS = {'X-Api-Key': LIDARR_API_KEY}
+PORT = int(os.environ.get('PORT', 5000))
 HISTORY_FILE = 'history.json'
 DEBUG_MODE = os.environ.get("DEBUG_MODE", "False").lower() == "true"
 ENGINE_STATUS = "Sleeping"
@@ -359,4 +360,4 @@ if __name__ == "__main__":
     worker_thread.start()
     
     print("[WEBUI] Starting Web Server on port 5000...")
-    app.run(host="0.0.0.0", port=5000, use_reloader=False)
+    app.run(host="0.0.0.0", port=PORT, use_reloader=False)
