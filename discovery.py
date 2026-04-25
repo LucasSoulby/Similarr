@@ -24,6 +24,7 @@ LIDARR_HEADERS = {'X-Api-Key': LIDARR_API_KEY}
 PORT = int(os.environ.get('PORT', 5000))
 HISTORY_FILE = 'history.json'
 DEBUG_MODE = os.environ.get("DEBUG_MODE", "False").lower() == "true"
+RUN_MODE = os.environ.get("RUN_MODE", "BOTH").upper()
 ENGINE_STATUS = "Sleeping"
 
 # ==========================================
@@ -157,7 +158,7 @@ def process_and_add_to_lidarr(artist_name, lidarr_library):
 # ==========================================
 # MAIN DISCOVERY LOGIC
 # ==========================================
-def get_discoveries():
+def run_5star_artist_discovery():
     global CONFIG, ENGINE_STATUS
     ENGINE_STATUS = "Scanning..."
     CONFIG = load_config()
@@ -267,6 +268,36 @@ def get_discoveries():
             time.sleep(2)
 
     print("\n--- Discovery Run Complete! ---")
+
+# ------------------------------------------------
+# ENGINE 2: DISCOVER WEEKLY (ALBUMS)
+# ------------------------------------------------
+def run_discover_weekly_albums():
+    global ENGINE_STATUS
+    ENGINE_STATUS = "Discovering Weekly Albums..."
+    print("\n--- Starting Discover Weekly (Albums) ---")
+    
+    # TODO: Fetch Last.fm recent tracks
+    # TODO: Extract Artist and Album Name
+    # TODO: Ping Lidarr Album API
+    
+    print("--- Discover Weekly Run Complete ---")
+
+
+# ------------------------------------------------
+# MASTER CONTROLLER
+# ------------------------------------------------
+def get_discoveries():
+    """This routes the traffic based on your RUN_MODE"""
+    global ENGINE_STATUS
+    print(f"\n[SYSTEM] Starting Discovery Engine in mode: {RUN_MODE}")
+    
+    if RUN_MODE in ["BOTH", "5STAR"]:
+        run_5star_artist_discovery()
+        
+    if RUN_MODE in ["BOTH", "WEEKLY"]:
+        run_discover_weekly_albums()
+        
     ENGINE_STATUS = "Sleeping"
 
 # ==========================================
