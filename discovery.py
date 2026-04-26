@@ -272,14 +272,54 @@ def run_5star_artist_discovery():
 # ------------------------------------------------
 # ENGINE 2: DISCOVER WEEKLY (ALBUMS)
 # ------------------------------------------------
+def add_specific_album_to_lidarr(artist_name, album_name):
+    print(f"  -> [WEEKLY] Hunting for Album: '{album_name}' by '{artist_name}'...")
+    
+    # Phase 1: Find the Artist's MusicBrainz ID
+    search_url = f"{LIDARR_URL}/api/v1/artist/lookup?term={artist_name}"
+    artist_res = requests.get(search_url, headers=LIDARR_HEADERS)
+    
+    if artist_res.status_code == 200 and len(artist_res.json()) > 0:
+        artist_data = artist_res.json()[0]
+        mb_id = artist_data.get('foreignArtistId')
+        print(f"     [FOUND] Artist MusicBrainz ID: {mb_id}")
+        
+        # Phase 2: Look up the specific Album using that ID
+        search_term = f"{artist_name} {album_name}"
+        print(f"     [SEARCH] Asking Lidarr to find: '{search_term}'...")
+        
+        # Use 'params' to safely handle spaces in the search term
+        album_search_url = f"{LIDARR_URL}/api/v1/album/lookup"
+        album_res = requests.get(album_search_url, headers=LIDARR_HEADERS, params={"term": search_term})
+        
+        if album_res.status_code == 200:
+            for album in album_res.json():
+                # Verify this album belongs to our exact artist using the MusicBrainz ID
+                if album.get('artist', {}).get('foreignArtistId') == mb_id:
+                    print(f"     [BINGO] Found exact album match: {album['title']} (Album ID: {album.get('foreignAlbumId')})")
+                    
+                    # Phase 3 will go here (The PUT request to monitor it)
+                    return True
+            
+            print(f"     [FAILED] Could not find an album matching both criteria.")
+        
+    else:
+        print(f"     [FAILED] Could not locate artist '{artist_name}' in Lidarr searches.")
+        return False
+
 def run_discover_weekly_albums():
     global ENGINE_STATUS
     ENGINE_STATUS = "Discovering Weekly Albums..."
     print("\n--- Starting Discover Weekly (Albums) ---")
     
-    # TODO: Fetch Last.fm recent tracks
-    # TODO: Extract Artist and Album Name
-    # TODO: Ping Lidarr Album API
+    # DUMMY DATA FOR TESTING
+    test_artist = "The Midnight"
+    test_album = "Endless Summer"
+    
+    print(f"Test Target: {test_album} by {test_artist}")
+    
+    # We will call our new worker function here
+    add_specific_album_to_lidarr(test_artist, test_album)
     
     print("--- Discover Weekly Run Complete ---")
 
